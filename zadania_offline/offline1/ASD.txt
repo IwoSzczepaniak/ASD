@@ -1,0 +1,90 @@
+# Iwo Szczepaniak
+'''LEGENDA
+n - długosc listy
+p - wskaznik na pierwszy element
+k - najdalsze przestawienie w liscie
+j,i - pomocnicze indeksowanie
+'''
+
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+#indeksowanie zgodne z kopcem
+def left(i):
+    return 2*i + 1 # #
+def right(i):
+    return 2*i
+def parent(i):
+    return (i-1) // 2
+
+#funkcje pomocnicze wyliczające długość, umożliwiające skok do indeksu i, zamieniające j-ty indeks z i-tym
+def leng_list(p):
+    n = 0
+    while p.next is not None:
+        n += 1
+def jump_to(i, p): #zwraca wskaźnik na i-ty element linked listy
+    r = p
+    for j in range(i):
+        r = r.next
+    return r
+def SWAP(j,i, p):
+    prev_i = jump_to(i-1, p)
+    prev_j = jump_to(j-1, p)
+    i = prev_i.next
+    j = prev_j.next
+    next_i = i.next
+    next_j = j.next
+
+    prev_j.next = i  #przepinamy poprzednik j do i, oraz na odwrót
+    prev_i.next = j
+    j.next = next_i  #przepinamy następnik j do nastepnika i, oraz na odwrót
+    i.next = next_j
+
+def heapify(n, i, k, p): #ZMIENIC NA LINKED LIST
+    l = jump_to(left(i), p)
+    r = jump_to(right(i), p)
+    max = jump_to(i, p)
+    if i-left(i) <= k: #musi być spełnione zgodnie z warunkiem zadania
+        if l < n and l.val > max.val:
+            max = l
+    if i-right(i) <= k: #musi być spełnione zgodnie z warunkiem zadania
+        if r < n and r.val > max.val:
+            max = r
+    if max is not i:
+        #SWAP(i,max)
+        heapify(n, max, k, p)
+def build_heap(n, k, p):
+    for i in range(parent(n-1), -1, -1):
+        heapify(n, i, k, p)
+def heap_sort(n, k, p):
+    build_heap(n, k ,p)
+    for i in range(n-1, 0, -1):
+        #SWAP(0,i)
+        heapify(i, 0, k, p)
+
+#def SortH(p,k): #p wskaźnik na pierwszy element, k mówi o ile miejsc może zostać przesunięty każdy z elementów
+    #sortowanie
+
+def print_node(first):
+    while first is not None:
+        print(first.val,"-> ", end="")
+        first = first.next
+    print("")
+def make_linked_list(tab):
+    first = None
+    n = len(tab)
+    for i in range(n - 1, -1, -1):
+        temp = Node(tab[i])
+        temp.next = first
+        first = temp
+    return first
+
+
+if __name__ == '__main__':
+    print(':)')
+    l = [4,1,3,2,16,9,10,14,8,7]
+    head = make_linked_list(l)
+    print_node(head)
+
